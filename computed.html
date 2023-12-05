@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>To Do List</title>
+  </head>
+  <style>
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .mx-auto {
+      margin: 0 auto;
+    }
+    .mb-20 {
+      margin-bottom: 20px;
+    }
+    .ms-auto {
+      margin-left: auto;
+    }
+    .text-center {
+      text-align: center;
+    }
+    .fz-24 {
+      font-size: 24px;
+    }
+    .fz-40 {
+      font-size: 40px;
+    }
+    .py-8 {
+      padding-top: 8px;
+      padding-bottom: 8px;
+    }
+  </style>
+  <body>
+    <div id="toDoList" class="container">
+      <h2 class="mx-auto mb-20 text-center fz-40">{{header}}</h2>
+      <input
+        style="width: 90%; padding: 20px; font-size: 20px"
+        type="text"
+        placeholder="wirte something to do..."
+        v-model="newItem"
+      />
+      <button
+        @click="addTask"
+        :disabled="newItem.length == 0"
+        style="display: block; margin: 10px auto; padding: 8px 12px"
+      >
+        Add a Task
+      </button>
+      <ul>
+        <to-do-list
+          v-for="item in reverseItem"
+          :todo="item"
+          class="py-8 fz-24"
+        ></to-do-list>
+      </ul>
+    </div>
+  </body>
+
+  <!-- vue2 cdn -->
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+  <script>
+    Vue.component('to-do-list', {
+      props: ['todo'],
+      template: '<li>{{todo.task}}</li>',
+    })
+
+    let vm = new Vue({
+      el: '#toDoList',
+      data: {
+        header: 'To Do List',
+        newItem: '',
+        items: [
+          {
+            task: 'Learn Vue framework',
+            done: false,
+          },
+          {
+            task: 'Take a bath',
+            done: false,
+          },
+          {
+            task: 'Drink a cup of corn tea',
+            done: false,
+          },
+        ],
+      },
+      // methods的目的是改變資料（新增刪除修改）。
+      methods: {
+        // 將資料新增於item後方
+        addTask() {
+          let newTask = {
+            task: this.newItem,
+            done: false,
+          }
+          this.items.push(newTask)
+          this.newItem = ''
+        },
+      },
+      // compute的功用在於將資料轉成其他形式來呈現。
+      computed: {
+        // 將資料反轉來呈現。
+        reverseItem() {
+          return this.items.slice(0).reverse()
+        },
+      },
+    })
+  </script>
+</html>
